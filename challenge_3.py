@@ -3,7 +3,7 @@
 import sys
 
 def print_comb(input_str, start):
-    print input_str, start
+    """Returns the combination of the string for the characters X"""
     if start == len(input_str):
         print ''.join(input_str)
         return
