@@ -11,6 +11,12 @@ var port = process.env.PORT || 8080;
 var router = express.Router();
 
 router.post('/', function(req, res){
+    console.log("Request")
+    if(!req.body || !req.body.message){
+        console.log("BAD Request")
+        res.sendStatus(400);
+        return;
+    }
     const hash = crypto.createHash('sha256')
                        .update(req.body.message)
                        .digest('hex');
