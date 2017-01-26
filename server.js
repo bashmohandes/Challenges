@@ -10,6 +10,8 @@ var port = process.env.PORT || 8080;
 
 var router = express.Router();
 
+var dict = {};
+
 router.post('/', function(req, res){
     console.log("Request")
     if(!req.body || !req.body.message){
@@ -20,11 +22,23 @@ router.post('/', function(req, res){
     const hash = crypto.createHash('sha256')
                        .update(req.body.message)
                        .digest('hex');
+    dict[hash] = req.body.message;
+
     res.json({ digest: hash});
 });
 
 router.get('/:digest', function(req, res){
-    res.json(req.params.digest);
+    if(!req.params.digest) {
+        res.sendStatus(400);
+        return;
+    }
+
+    if(req.params.digest in dict) {
+        res.json({message: dict[req.params.digest]});
+        return;
+    }    
+
+    res.status(404).json({error_msg: "Message not found"});
 });
 
 app.use('/messages', router);
